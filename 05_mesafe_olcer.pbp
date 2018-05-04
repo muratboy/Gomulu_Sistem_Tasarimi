@@ -1,0 +1,43 @@
+DEFINE LOADER_USED 1
+
+define LCD_DREG PORTD
+define LCD_DBIT 4
+define LCD_RSREG PORTE
+define LCD_RSBIT 2
+define LCD_EREG PORTE
+define LCD_EBIT 1
+define LCD_BITS 4
+
+TRISB=0:TRISD=0:TRISE=0
+ADCON1=7
+pause 100
+
+'trigger
+symbol gonder_on=portb.1:gonder_on=0    
+symbol gonder_sag=portb.2:gonder_sag=0
+symbol gonder_sol=portb.0:gonder_sol=0
+
+'echo
+symbol al_on=portc.0:symbol al_sag=portc.5:symbol al_sol=portc.4
+
+algila_on var word:algila_sag var word:algila_sol var word
+mesafe_on var word:mesafe_sag var word:mesafe_sol var word
+
+cevir_cm var word:cevir_cm=6
+
+label:
+    pulsout gonder_on,1
+    pulsin al_on,1,algila_on
+    pulsout gonder_sag,1
+    pulsin al_sag,1,algila_sag
+    pulsout gonder_sol,1
+    pulsin al_sol,1,algila_sol
+    
+    mesafe_on=algila_on/cevir_cm
+    mesafe_sag=algila_sag/cevir_cm
+    mesafe_sol=algila_sol/cevir_cm
+    pause 1
+    lcdout $fe,1,"     on:",#mesafe_on
+    lcdout $fe,$c0,"sol:",#mesafe_sol,"  sag:",#mesafe_sag
+    pause 100
+goto label

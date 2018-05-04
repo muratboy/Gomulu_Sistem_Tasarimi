@@ -1,0 +1,19 @@
+DEFINE LOADER_USED 1
+
+define LCD_DREG PORTD
+define LCD_DBIT 4
+define LCD_RSREG PORTE
+define LCD_RSBIT 2
+define LCD_EREG PORTE
+define LCD_EBIT 1
+define LCD_BITS 4
+
+TRISD=0:TRISE=0
+ADCON1=7		'analog portlari digital olarak kullanabilmek icin
+pause 100
+
+label:
+	lcdout $fe,1,"Selam"		'$fe,1 ekrani sifirlar_yanina yazilan ust satirin basina yazilir
+    lcdout $fe,$c0,"Gardas"		'$fe,$c0 ikinci satirin basina yazdirir
+    pause 100
+goto label

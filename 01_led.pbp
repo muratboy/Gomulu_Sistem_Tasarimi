@@ -1,0 +1,13 @@
+DEFINE LOADER_USED 1
+TRISB=0		'butun b portlari output olsun
+
+portb=255	'butun b portlari 1 olsun
+
+label:
+    portb.5=1:portb.7=0		'5. porttaki renk sonsun 7.porttaki renk yansin
+    pause 1000
+    portb.7=1:portb.6=0		'7. porttaki renk sonsun 6.porttaki renk yansin
+    pause 1000
+    portb.6=1:portb.5=0		'6. porttaki renk sonsun 5.porttaki renk yansin
+    pause 1000
+goto label

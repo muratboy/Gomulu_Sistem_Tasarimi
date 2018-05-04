@@ -1,0 +1,12 @@
+DEFINE LOADER_USED 1
+
+TRISE=%000
+ADCON1=7
+
+i var word
+
+label:
+    for i=0 to 255
+    	Sound porte.0,[i,10]
+    next i
+goto label

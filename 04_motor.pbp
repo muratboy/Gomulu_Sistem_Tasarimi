@@ -1,0 +1,41 @@
+DEFINE LOADER_USED 1
+
+define HSER_RCSTA 90h
+define HSER_TXSTA 24h
+define HSER_BAUD 9600
+define HSER_CLROERR 1
+TRISC=%10000000:TRISD=0
+
+symbol sag_enable=portc.1
+symbol sag_ileri=portd.0
+symbol sag_geri=portd.1
+symbol sol_enable=portc.2
+symbol sol_ileri=portd.2
+symbol sol_geri=portd.3
+
+x var byte
+
+label:
+    hserin [x]
+    select case x
+       case "w" 
+            sag_enable=1:sol_enable=1
+            sag_ileri=1:sag_geri=0
+            sol_ileri=1:sol_geri=0
+       case "s"
+            sag_enable=1:sol_enable=1 
+            sag_ileri=0:sag_geri=1
+            sol_ileri=0:sol_geri=1
+       case "a"
+            sag_enable=1:sol_enable=1
+            sag_ileri=1:sag_geri=0
+            sol_ileri=0:sol_geri=1
+       case "d"
+            sag_enable=1:sol_enable=1
+            sag_ileri=0:sag_geri=1
+            sol_ileri=1:sol_geri=0  
+    end select
+    x=" "
+    pause 50
+    sag_enable=0:sol_enable=0 
+goto label
