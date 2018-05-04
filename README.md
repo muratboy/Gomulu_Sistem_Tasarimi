@@ -1,0 +1,1 @@
+# Gomulu_Sistem_Tasarimi
