@@ -25,22 +25,21 @@ symbol al_on=portc.0:symbol al_sag=portc.5:symbol al_sol=portc.4
 algila_on var word:algila_sag var word:algila_sol var word
 mesafe_on var word:mesafe_sag var word:mesafe_sol var word
 
-cevir_cm var word:cevir_cm=6:x var byte:j var word
-
+cevir_cm var word:cevir_cm=6:x var byte
 
 label:
-    gosub mesafe
-    pause 1
-    if mesafe_on<10 then
-        if mesafe_sol>25 then 
+    gosub mesafe	'sag,sol ve onden mesafeleri olcuyor
+
+    if mesafe_on<10 then	'onumuzde 10cm'den yakın bir engel varsa
+        if mesafe_sol>25 then 	'solda 25cm'den yakin engel yoksa sola don
             gosub soladon
-        elseif mesafe_sag>25 then 
+        elseif mesafe_sag>25 then	'sol tarafta engel varsa ve sagda yoksa saga don
             gosub sagadon
         else
-            gosub geridon
+            gosub geridon	'onde, solda ve sagda engeller varsa geriye don
         endif
     else
-        x="w" 
+        x="w"		'onde engel yoksa ileri hareket et 
     endif
     gosub hareket
     lcdout $fe,1,"     on:",#mesafe_on

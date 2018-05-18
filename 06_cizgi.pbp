@@ -18,15 +18,16 @@ x var byte:i var word:j var word
 
 label:
     
-    if sol=1 then x="a"
-    if sag=1 then x="d"
-    if orta=1 then x="w"
+    if sol=1 then x="a"		'soldaki sensor cizgiyi goruyorsa sola ayarla
+    if sag=1 then x="d"		'sagdaki sensor cizgiyi goruyorsa saga ayarla
+    if orta=1 then x="w"	'ortadaki sensor cizgiyi goruyorsa ileri ayarla
+				'ortadaki sensor cizgiyi gordugu surece sagi solu onemsemez ileri gider
     gosub hareket    
     lcdout $fe,1,"     orta:",#orta
     lcdout $fe,$c0,"sol:",#sol,"  sag:",#sag
     pause 100
     
-    if sag=0 and sol=0 and orta=0 then gosub ara
+    if sag=0 and sol=0 and orta=0 then gosub ara	'sensorlerin hicbiri cizgiyi gormuyorsa cizgiyi bulmak icin tarama yap
  
 goto label
 
@@ -52,11 +53,13 @@ hareket:
 return
 
 ara:
+	'sola dogru tara
         for i=0 to 250
             x="a":gosub hareket
             pause 10
-            if orta=1 or sag=1 or sol=1 then return
+            if orta=1 or sag=1 or sol=1 then return	'sensorlerden herhangi biri cizgiyi gorurse ara fonksiyonunda çık
         next i
+	'saga dogru tara
         for i=0 to 500
             x="d":gosub hareket  
             pause 10
