@@ -1,0 +1,97 @@
+DEFINE LOADER_USED 1
+
+define LCD_DREG PORTD
+define LCD_DBIT 4
+define LCD_RSREG PORTE
+define LCD_RSBIT 2
+define LCD_EREG PORTE
+define LCD_EBIT 1
+define LCD_BITS 4
+
+TRISA=%000111:TRISB=0:TRISC=%10000000:TRISD=0:TRISE=0:ADCON1=7
+pause 100
+
+symbol sag_enable=portc.1:symbol sag_ileri=portd.0:symbol sag_geri=portd.1
+symbol sol_enable=portc.2:symbol sol_ileri=portd.2:symbol sol_geri=portd.3
+
+symbol sag=porta.0:symbol sol=porta.2:symbol orta=porta.1
+
+symbol gonder_on=portb.1:gonder_on=0    
+symbol gonder_sag=portb.2:gonder_sag=0
+symbol gonder_sol=portb.0:gonder_sol=0
+
+symbol al_on=portc.0:symbol al_sag=portc.5:symbol al_sol=portc.4
+
+algila_on var word:algila_sag var word:algila_sol var word
+mesafe_on var word:mesafe_sag var word:mesafe_sol var word
+
+cevir_cm var word:cevir_cm=6:x var byte:j var word
+
+
+label:
+    gosub mesafe
+    pause 1
+    if mesafe_on<10 then
+        if mesafe_sol>25 then 
+            gosub soladon
+        elseif mesafe_sag>25 then 
+            gosub sagadon
+        else
+            gosub geridon
+        endif
+    else
+        x="w" 
+    endif
+    gosub hareket
+    lcdout $fe,1,"     on:",#mesafe_on
+    lcdout $fe,$c0,"sol:",#mesafe_sol,"  sag:",#mesafe_sag
+    pause 100
+goto label
+    
+hareket:
+    select case x
+       case "w" 
+            sag_enable=1:sol_enable=1
+            sag_ileri=1:sag_geri=0
+            sol_ileri=1:sol_geri=0
+       case "s"
+            sag_enable=1:sol_enable=1 
+            sag_ileri=0:sag_geri=1
+            sol_ileri=0:sol_geri=1
+       case "a"
+            sag_enable=1:sol_enable=1
+            sag_ileri=1:sag_geri=0
+            sol_ileri=0:sol_geri=1
+       case "d"
+            sag_enable=1:sol_enable=1
+            sag_ileri=0:sag_geri=1
+            sol_ileri=1:sol_geri=0  
+    end select
+return
+
+mesafe:
+    pulsout gonder_on,1
+    pulsin al_on,1,algila_on
+    pulsout gonder_sag,1
+    pulsin al_sag,1,algila_sag
+    pulsout gonder_sol,1
+    pulsin al_sol,1,algila_sol
+    mesafe_on=algila_on/cevir_cm
+    mesafe_sag=algila_sag/cevir_cm
+    mesafe_sol=algila_sol/cevir_cm
+return
+
+soladon:
+    x="a":gosub hareket
+    pause 5000
+return
+
+sagadon:
+    x="d":gosub hareket
+    pause 5000
+return
+
+geridon:
+    x="a":gosub hareket
+    pause 11500
+return
