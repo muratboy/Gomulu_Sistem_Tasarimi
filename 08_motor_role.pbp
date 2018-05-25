@@ -18,7 +18,7 @@ symbol sag_role=portb.4
 symbol sol_role=portb.3
 i=0:x=0
 
-'sag tekerlek hizlanincaya kadar bir miktar doner 
+'sag tekerlek hizlanincaya kadar bir miktar doner, ileri giderken bir tekeri olcmek yeterli
 while sag_role!=1
     gosub ileri 
 wend
