@@ -1,0 +1,38 @@
+DEFINE LOADER_USED 1
+define LCD_DREG PORTD
+define LCD_DBIT 4
+define LCD_RSREG PORTE
+define LCD_RSBIT 2
+define LCD_EREG PORTE
+define LCD_EBIT 1
+define LCD_BITS 4
+TRISA=0:TRISB=255:TRISC=%10000000:TRISD=0:TRISE=0:ADCON1=7
+pause 100
+
+symbol sag_enable=portc.1:symbol sag_ileri=portd.0:symbol sag_geri=portd.1
+symbol sol_enable=portc.2:symbol sol_ileri=portd.2:symbol sol_geri=portd.3
+
+i var word:x var byte
+'sag ve sol on tekerleklerde bulunan roleler
+symbol sag_role=portb.4
+symbol sol_role=portb.3
+i=0:x=0
+
+'sag tekerlek hizlanincaya kadar bir miktar doner 
+while sag_role!=1
+    gosub ileri 
+wend
+'hizalanan tekerlek tur sayimina hazirdir 
+label:
+    gosub ileri 
+    if sag_role=1 then i=i+1	'role her sinyal verdiginde 1 tur donmus demektir sayaci 1 arttir
+    x=i*10	'tur sayisini cm'ye cevir
+    lcdout $fe,1,#x,"cm"     
+goto label
+
+ileri:
+    sag_enable=1:sol_enable=1
+    sag_ileri=1:sag_geri=0
+    sol_ileri=1:sol_geri=0
+    pause 100
+return

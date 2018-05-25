@@ -1,0 +1,41 @@
+DEFINE LOADER_USED 1
+define HSER_RCSTA 90h
+define HSER_TXSTA 24h
+define HSER_BAUD 9600
+define HSER_CLROERR 1
+define LCD_DREG PORTD
+define LCD_DBIT 4
+define LCD_RSREG PORTE
+define LCD_RSBIT 2
+define LCD_EREG PORTE
+define LCD_EBIT 1
+define LCD_BITS 4
+TRISA=0:TRISB=255:TRISC=%10000000:TRISD=0:TRISE=0:ADCON1=7
+pause 100
+
+symbol sag_ileri=portd.0:symbol sag_geri=portd.1
+symbol sol_ileri=portd.2:symbol sol_geri=portd.3
+
+i var word:x var byte
+i=205:x=0
+label:
+    hserin 50,devam,[x]
+    devam:
+    
+    if x="w" and i<255 then 
+        i=i+10
+    endif
+    if x="s" and i>160 then 
+        i=i-10
+    endif
+    x="$"
+    
+    lcdout $fe,1,#i
+    pause 100
+      
+    pwm portc.1,i,10:pwm portc.2,i,10	'motorlara giden voltaj oranini i degiskeniyle ayarla	
+    sag_ileri=1:sag_geri=0
+    sol_ileri=1:sol_geri=0
+         
+goto label
+
